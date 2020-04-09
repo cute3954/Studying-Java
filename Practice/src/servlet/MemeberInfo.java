@@ -9,8 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import db.MemberDAO;
 import model.Member;
-import model.ShowMemberInfo;
 
 /* Controller */
 // サーブレットクラス
@@ -20,7 +20,7 @@ import model.ShowMemberInfo;
 // サーブレットのプログラミングでは、アノテーションによってURLパスとサーブレットとのマッピング情報を宣言することができる
 // web.xmlを使うか、アノテーションをつかうかは選択できる
 @WebServlet("/MemberInfo")
-public class MemerInfo extends HttpServlet {
+public class MemeberInfo extends HttpServlet {
 	// シリアルバージョンIDの追加
 	// 直列化した時（Serializableをインポートした時）に必要。
 	// Serializableクラスのバージョンコントロールとして使用される
@@ -35,7 +35,7 @@ public class MemerInfo extends HttpServlet {
 		// 処理をフォワード先のサーブレットに移してしまうので、呼び出し元のサーブレットには処理は戻ってこない。
 		// また呼び出し元の方ではレスポンスに対する出力も行わない。
 		// そのため、呼び出し元の方で何らかの処理を行った上で、処理をフォワード先のサーブレットに完全に移す場合に利用する。
-		RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/requestMemberInfo.jsp");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/memberInfo.jsp");
 		// forwardの引数は、呼び出し元のサーブレットのdoGetやdoPostが呼び出された時に引数に指定されている値をそのまま渡す。
 		dispatcher.forward(request, response);
 	}
@@ -43,27 +43,30 @@ public class MemerInfo extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
 		// リクエストパラメータを取得
-		String name = request.getParameter("name");
-		String groupName = request.getParameter("groupName");
+		int member_no = Integer.parseInt(request.getParameter("member_no"));
 		
 		// 入力値をプロパティに設定
 		Member member = new Member();
-		member.setName(name);
-		member.setGroupName(groupName);
+		member.setMember_no(member_no);
 		
 		// 各メンバーの紹介を出す
-		ShowMemberInfo showMemberInfo = new ShowMemberInfo();
-		showMemberInfo.execute(member);
-		
-		// リクエストスコープに保存
-		// リクエストごとに生成されるスコープ。
-		// フォワード先とフォワード元でインスタンスを共有することが可能になる。
-		// 第1引数：スコープに保存するインスタンスの管理用の名前、第2引数：保存するインスタンスを指定。
-		request.setAttribute("member", member);
-		
-		// フォワード
-		RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/showMemberIntroduction.jsp");
-		dispatcher.forward(request, response);
+		MemberDAO memberDAO = new MemberDAO();
+		try {
+			memberDAO.execute(member);
+			
+			// リクエストスコープに保存
+			// リクエストごとに生成されるスコープ。
+			// フォワード先とフォワード元でインスタンスを共有することが可能になる。
+			// 第1引数：スコープに保存するインスタンスの管理用の名前、第2引数：保存するインスタンスを指定。
+			request.setAttribute("member", member);
+			
+			// フォワード
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/memberInfo.jsp");
+			dispatcher.forward(request, response);
+		} catch (Exception e) {
+			System.out.println("Error: "+e);
+			e.printStackTrace();
+		}
 	}
 	
 }

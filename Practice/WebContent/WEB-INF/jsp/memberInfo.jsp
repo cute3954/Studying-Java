@@ -10,7 +10,24 @@
 <title>ラブライブ！サンシャイン！</title>
 </head>
 <body>
-	<img alt="<%= member.getMember_name() %>" src="<%= member.getMember_image_fileurl() %>">
+	<%
+		if (member.getMember_image_fileurl() != null) {
+	%>
+		<img alt="<%= member.getMember_name() %>" src="<%= member.getMember_image_fileurl() %>">
+	<%
+		} else {
+		// 画像がない場合
+		// 画像をアップロードできるようにし、選択されたファイルをプレビュー表示する
+	%>
+	<form action="UploadMemberImage" method="post" enctype="multipart/form-data">
+		<input type="file" id="_uploadImage" name="member_imagefile"/><br>
+		<div id="_previewArea"></div>
+		<input type="hidden" name="member_no" value="<%= member.getMember_no() %>"/>
+		<input type="submit" value="画像をアップロードする">
+	</form>
+	<%
+		}
+	%>	
 	<p>
 		<%= member.getMember_name() %><br>
 		<%= member.getMember_name_hurigana() %><br>
@@ -22,5 +39,8 @@
 		趣味：　<%= member.getMember_hobby() %><br>
 		特技：　<%= member.getMember_skill() %><br>
 	</p>
+<!-- jsファイル -->
+<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/member_image_upload.js"></script>
 </body>
 </html>

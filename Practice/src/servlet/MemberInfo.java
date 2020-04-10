@@ -20,7 +20,7 @@ import model.Member;
 // サーブレットのプログラミングでは、アノテーションによってURLパスとサーブレットとのマッピング情報を宣言することができる
 // web.xmlを使うか、アノテーションをつかうかは選択できる
 @WebServlet("/MemberInfo")
-public class MemeberInfo extends HttpServlet {
+public class MemberInfo extends HttpServlet {
 	// シリアルバージョンIDの追加
 	// 直列化した時（Serializableをインポートした時）に必要。
 	// Serializableクラスのバージョンコントロールとして使用される
@@ -52,7 +52,7 @@ public class MemeberInfo extends HttpServlet {
 		// 各メンバーの紹介を出す
 		MemberDAO memberDAO = new MemberDAO();
 		try {
-			memberDAO.execute(member);
+			memberDAO.showMemberInfo(member);
 			
 			// リクエストスコープに保存
 			// リクエストごとに生成されるスコープ。

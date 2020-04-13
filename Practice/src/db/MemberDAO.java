@@ -103,4 +103,22 @@ public class MemberDAO {
 			this.closeConnection();
 		}	
 	}
+	
+	// メンバーの画像ファイル名をDBに保存する
+	public void uploadMemberImage(Member member) {
+		try {			
+			this.connectDB();			
+			String sql = "UPDATE member_lovelive SET member_image_fileurl = ? where member_no = ?";
+			// SQLを実行
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, member.getMember_image_fileurl());
+			ps.setInt(2, member.getMember_no());
+			ps.executeUpdate();
+		} catch (Exception e) {
+			System.out.println("Exception:" + e.getMessage());
+		} finally {
+			this.closeConnection();
+		}	
+	}
+	
 }

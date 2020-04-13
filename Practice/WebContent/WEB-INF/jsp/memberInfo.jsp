@@ -13,7 +13,7 @@
 	<%
 		if (member.getMember_image_fileurl() != null) {
 	%>
-		<img alt="<%= member.getMember_name() %>" src="<%= member.getMember_image_fileurl() %>">
+		<img alt="<%= member.getMember_name() %>" src="${pageContext.request.contextPath}/resources/img/<%= member.getMember_image_fileurl() %>">
 	<%
 		} else {
 		// 画像がない場合

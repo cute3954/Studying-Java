@@ -1,0 +1,3 @@
+homura@test.com=Homura Akemi
+touka@test.com=Touka Satomi
+mami@test.com=Mami Tomoe

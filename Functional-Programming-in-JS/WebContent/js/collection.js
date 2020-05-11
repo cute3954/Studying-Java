@@ -25,3 +25,18 @@ console.log(_values(users[0]));
 console.log(_pluck(users, 'age'));
 console.log(_pluck(users, 'name'));
 console.log(_pluck(users, 'id'));
+
+// 2. フィルターする：　filter
+console.log(
+	_filter(users, function(user) {
+		return user.age > 30;
+	})
+);
+//	1) reject
+console.log(
+	_reject(users, function(user) {
+		return user.age > 30;
+	})
+);
+//	2) compact
+console.log(_compact([1, 2, 0, false, null, {}]));

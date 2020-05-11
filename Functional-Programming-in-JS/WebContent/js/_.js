@@ -10,9 +10,7 @@ function _filter(list, predi) {
 //		}
 //	}
 	_each(list, function(val) {
-		if (predi(val)) {
-			new_list.push(val);
-		}
+		if (predi(val)) new_list.push(val);
 	});
 	return new_list;
 }
@@ -105,8 +103,10 @@ function _each(list, iter) {
 	return list;
 }
 
-var _map = _curryr(_map);
-var _values = _map(_identity);
+var _map = _curryr(_map),
+_filter = _curryr(_filter),
+_values = _map(_identity);
+
 function _identity(val) {
 	return val;
 }
@@ -114,3 +114,17 @@ function _identity(val) {
 function _pluck(data, key) {
 	return _map(data, _get(key));
 }
+
+function _negate(func) {
+	return function(val) {
+		return !func(val);
+	}
+}
+
+// filter()と真逆
+function _reject(data, predi) {
+	return _filter(data, _negate(predi));
+}
+
+// 引数配列の各値でfalseとなるものを排除した配列が返される。
+var _compact = _filter(_identity);

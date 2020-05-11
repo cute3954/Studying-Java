@@ -104,3 +104,13 @@ function _each(list, iter) {
 	}
 	return list;
 }
+
+var _map = _curryr(_map);
+var _values = _map(_identity);
+function _identity(val) {
+	return val;
+}
+
+function _pluck(data, key) {
+	return _map(data, _get(key));
+}

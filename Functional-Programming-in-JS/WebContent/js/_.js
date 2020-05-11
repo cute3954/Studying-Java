@@ -29,14 +29,6 @@ function _map(list, mapper) {
 	return new_list;
 }
 
-// underscore.jsのeach()と同じ。
-function _each(list, iter) {
-	for (var i = 0; i < list.length; i++) {
-		iter(list[i]);
-	}
-	return list;
-}
-
 // カリー化について -> https://qiita.com/KtheS/items/1a93ba0a6d722a534439
 // カリー化したメソッド
 function _curry(fn) {
@@ -92,4 +84,23 @@ function _pipe() {
 			return fn(arg);
 		}, arg);
 	};
+}
+
+function _is_object(obj) {
+	// !!: 真偽値を反転したい、つまりtrueを返す。
+	// 参照： https://www.penpale.jp/blog/double_exclamation_mark.html
+	return typeof obj == 'object' && !!obj;
+}
+
+function _keys(obj) {
+	return _is_object(obj) ? Object.keys(obj) : [];
+}
+
+//underscore.jsのeach()と同じ。
+function _each(list, iter) {
+	var keys = _keys(list);
+	for (var i = 0, len = keys.length; i < len; i++) {
+		iter(list[keys[i]]);
+	}
+	return list;
 }

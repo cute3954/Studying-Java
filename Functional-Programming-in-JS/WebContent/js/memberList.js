@@ -176,3 +176,41 @@ var add = (a, b) => {
 };
 // objectリテラル式を返す場合、本体を丸括弧で囲む
 var add = (a, b) => ({val: a + b});
+
+// nullが入っていたら、エラーを出さず空の配列を返す。
+_each(null, console.log);
+console.log(_map(null, function(v) {return v;}));
+
+_go(null,
+	_filter(function(v) {return v % 2;}),
+	_map(function(v) {return v * v;}),
+	console.log);
+
+console.log(_keys({name: 'ID', age: 33}));
+console.log(_keys([1, 2, 3, 4]));
+console.log(_keys(10));
+// nullが入ったらエラーを出す
+console.log(_keys(null));
+
+_each({
+	13: 'ID',
+	19: 'HD',
+	29: 'YD'
+}, function(name) {
+	console.log(name);
+});
+console.log(_map({
+	13: 'ID',
+	19: 'HD',
+	29: 'YD'
+}, function(name) {
+	return name.toLowerCase();
+}));
+_go(users,
+	_map(function(user) {
+		return user.name;
+	}),
+	_map(function(name) {
+		return name.toLowerCase();
+	}),
+console.log);

@@ -10,9 +10,7 @@ function _filter(list, predi) {
 //		}
 //	}
 	_each(list, function(val) {
-		if (predi(val)) {
-			new_list.push(val);
-		}
+		if (predi(val)) new_list.push(val);
 	});
 	return new_list;
 }
@@ -27,14 +25,6 @@ function _map(list, mapper) {
 		new_list.push(mapper(val));
 	});
 	return new_list;
-}
-
-// underscore.jsのeach()と同じ。
-function _each(list, iter) {
-	for (var i = 0; i < list.length; i++) {
-		iter(list[i]);
-	}
-	return list;
 }
 
 // カリー化について -> https://qiita.com/KtheS/items/1a93ba0a6d722a534439
@@ -92,4 +82,76 @@ function _pipe() {
 			return fn(arg);
 		}, arg);
 	};
+}
+
+function _is_object(obj) {
+	// !!: 真偽値を反転したい、つまりtrueを返す。
+	// 参照： https://www.penpale.jp/blog/double_exclamation_mark.html
+	return typeof obj == 'object' && !!obj;
+}
+
+function _keys(obj) {
+	return _is_object(obj) ? Object.keys(obj) : [];
+}
+
+// underscore.jsのeach()と同じ。
+function _each(list, iter) {
+	var keys = _keys(list);
+	for (var i = 0, len = keys.length; i < len; i++) {
+		iter(list[keys[i]]);
+	}
+	return list;
+}
+
+var _map = _curryr(_map),
+_filter = _curryr(_filter),
+_values = _map(_identity);
+
+function _identity(val) {
+	return val;
+}
+
+function _pluck(data, key) {
+	return _map(data, _get(key));
+}
+
+function _negate(func) {
+	return function(val) {
+		return !func(val);
+	}
+}
+
+// filter()と真逆
+function _reject(data, predi) {
+	return _filter(data, _negate(predi));
+}
+
+// 引数配列の各値でfalseとなるものを排除した配列が返される。
+var _compact = _filter(_identity);
+
+function _find(list, predi) {
+	var keys = _keys(list);
+	for (var i = 0, len = keys.length; i < len; i++) {
+		var val = list[keys[i]];
+		if (predi(val)) return val;
+	}
+}
+
+function _find_index(list, predi) {
+	var keys = _keys(list);
+	for (var i = 0, len = keys.length; i < len; i++) {
+		if (predi(list[keys[i]])) return i;
+	}
+	return -1;
+}
+
+var _find = _curryr(_find),
+_find_index = _curryr(_find_index);
+
+function _some(data, predi) {
+	return _find_index(data, predi || _identity) != -1;
+}
+
+function _every(data, predi) {
+	return _find_index(data, _negate(predi || _identity)) == -1;
 }

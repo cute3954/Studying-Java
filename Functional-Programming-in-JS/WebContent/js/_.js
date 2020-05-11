@@ -94,7 +94,7 @@ function _keys(obj) {
 	return _is_object(obj) ? Object.keys(obj) : [];
 }
 
-//underscore.jsのeach()と同じ。
+// underscore.jsのeach()と同じ。
 function _each(list, iter) {
 	var keys = _keys(list);
 	for (var i = 0, len = keys.length; i < len; i++) {
@@ -128,3 +128,30 @@ function _reject(data, predi) {
 
 // 引数配列の各値でfalseとなるものを排除した配列が返される。
 var _compact = _filter(_identity);
+
+function _find(list, predi) {
+	var keys = _keys(list);
+	for (var i = 0, len = keys.length; i < len; i++) {
+		var val = list[keys[i]];
+		if (predi(val)) return val;
+	}
+}
+
+function _find_index(list, predi) {
+	var keys = _keys(list);
+	for (var i = 0, len = keys.length; i < len; i++) {
+		if (predi(list[keys[i]])) return i;
+	}
+	return -1;
+}
+
+var _find = _curryr(_find),
+_find_index = _curryr(_find_index);
+
+function _some(data, predi) {
+	return _find_index(data, predi || _identity) != -1;
+}
+
+function _every(data, predi) {
+	return _find_index(data, _negate(predi || _identity)) == -1;
+}

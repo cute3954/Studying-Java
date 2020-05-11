@@ -40,3 +40,69 @@ console.log(
 );
 //	2) compact
 console.log(_compact([1, 2, 0, false, null, {}]));
+
+console.clear();
+
+// 3. 見つける：　find, find_index
+console.log(
+	_get(_find(users, function(user) {
+		return user.age < 30;
+	}), 'name')
+);
+_go(users,
+	_find(function(user) { return user.id > 30; }),
+	_get('name'),
+	console.log
+);
+console.log(
+	_find_index(users, function(user) {
+		return user.id == 50;
+	})
+);
+// 	1) some
+console.log(
+	_some([1, 2, 5, 10, 20], function(val) {
+		return val > 10;
+	})
+);
+console.log(
+	_some([1, 2, 5, 10, 20], function(val) {
+		return val > 20;
+	})
+);
+// 第2引数省略
+// true
+console.log(
+	_some([1, 2, 0, 10])
+);
+// false
+console.log(
+	_some([null, false, 0])
+);
+
+console.log(
+	_some(users, function(user) {
+		return user.age < 20;
+	})
+);
+
+//	2) every
+console.log(
+	_every([1, 2, 5, 10, 20], function(val) {
+		return val > 10;
+	})
+);
+console.log(
+	_every([12, 24, 5, 10, 20], function(val) {
+		return val > 3;
+	})
+);
+// 第2引数省略
+// false
+console.log(
+	_every([null, false, 1])
+);
+// true
+console.log(
+	_every([1, 2, 10])
+);

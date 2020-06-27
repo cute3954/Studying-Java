@@ -21,8 +21,8 @@ function _map(list, mapper) {
 //	for (var i = 0; i < list.length; i++) {
 //		new_list.push(mapper(list[i]));
 //	}
-	_each(list, function(val) {
-		new_list.push(mapper(val));
+	_each(list, function(val, key) {
+		new_list.push(mapper(val, key));
 	});
 	return new_list;
 }
@@ -58,7 +58,7 @@ function _rest(list, num) {
 // 累積処理される。
 function _reduce(list, iter, memo = 0) {
 	// 引数が3未満なら配列の最初の値をメモする。
-	if (arguments.lenght == 2) {
+	if (arguments.length == 2) {
 		memo = list[0];
 		list = _rest(list);
 	}
@@ -98,7 +98,7 @@ function _keys(obj) {
 function _each(list, iter) {
 	var keys = _keys(list);
 	for (var i = 0, len = keys.length; i < len; i++) {
-		iter(list[keys[i]]);
+		iter(list[keys[i]], keys[i]);
 	}
 	return list;
 }
@@ -122,9 +122,9 @@ function _negate(func) {
 }
 
 // filter()と真逆
-function _reject(data, predi) {
+var _reject = _curryr(function _reject(data, predi) {
 	return _filter(data, _negate(predi));
-}
+});
 
 // 引数配列の各値でfalseとなるものを排除した配列が返される。
 var _compact = _filter(_identity);
@@ -155,3 +155,59 @@ function _some(data, predi) {
 function _every(data, predi) {
 	return _find_index(data, _negate(predi || _identity)) == -1;
 }
+
+function _min(data) {
+	return _reduce(data, function(a, b) {
+		return a < b ? a : b;
+	});
+}
+
+function _max(data) {
+	return _reduce(data, function(a, b) {
+		return a > b ? a : b;
+	});
+}
+
+function _min_by(data, iter) {
+	return _reduce(data, function(a, b) {
+		return iter(a) < iter(b) ? a : b;
+	});
+}
+
+function _max_by(data, iter) {
+	return _reduce(data, function(a, b) {
+		return iter(a) > iter(b) ? a : b;
+	});
+}
+
+var _min_by = _curryr(_min_by),
+	_max_by = _curryr(_max_by);
+
+function _push(obj, key, val) {
+	(obj[key] = obj[key] || []).push(val);
+	return obj;
+}
+
+var _head = function(list) {
+	return list[0];
+};
+
+var _group_by = _curryr(function(data, iter) {
+	return _reduce(data, function(grouped, val) {
+		return _push(grouped, iter(val), val);
+	}, {});
+});
+
+var _inc = function(obj, key) {
+	obj[key] ? obj[key]++ : obj[key] = 1;
+	return obj;
+};
+
+var _count_by = _curryr(function(data, iter) {
+	return _reduce(data, function(count, val) {
+		return _inc(count, iter(val));
+	}, {});
+});
+
+// 引数Objectの各キーとその値をペアにした配列を値とする入れ子の配列を返す
+var _pairs = _map((val, key) => [key, val]);

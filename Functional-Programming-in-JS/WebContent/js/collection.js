@@ -106,3 +106,111 @@ console.log(
 console.log(
 	_every([1, 2, 10])
 );
+
+console.log(
+	_min([1, 2, 4, 10, 5, -4])
+);
+console.log(
+	_max([1, 2, 4, 10, 5, -4])
+);
+console.log(
+	_min_by([1, 2, 4, 10, 5, -4], Math.abs)
+);
+console.log(
+	_max_by([1, 2, 4, 10, 5, -4, -11], Math.abs)
+);
+// _max_byと違い、[1, 2, 4, 10, 5, -4, -11]の値が絶対値に変わってしまう。
+console.log(
+	_max(_map([1, 2, 4, 10, 5, -4, -11], Math.abs))
+);
+console.log(
+	_min_by(users, function(user){
+		return user.age;
+	})		
+);
+console.log(
+	_max_by(users, function(user){
+		return user.age;
+	})		
+);
+
+_go(users,
+	_filter(user => user.age >= 30),
+	_map(_get('age')),
+	_min,
+	console.log
+);
+
+_go(users,
+	_reject(user => user.age >= 30),
+	_max_by(_get('age')),
+	_get('name'),
+	console.log
+);
+
+console.clear();
+
+_go(users,
+	_group_by(_get('age')), 
+	console.log
+);
+
+_go(users,
+	_group_by(function(user) {
+		return user.age - user.age % 10;
+	}), 
+	console.log
+);
+
+_go(users,
+	_group_by(function(user) {
+		return user.name[0];
+	}), 
+	console.log
+);
+
+_go(users,
+	_group_by(_pipe(_get('name'), _head)), 
+	console.log
+);
+
+_go(users,
+	_count_by(_get('age')), 
+	console.log
+);
+
+_go(users,
+	_count_by(function(user) {
+		return user.age - user.age % 10;
+	}), 
+	console.log
+);
+
+_go(users,
+	_count_by(function(user) {
+		return user.name[0];
+	}), 
+	console.log
+);
+console.log(
+	_pairs(users[0])
+);
+
+console.clear();
+
+var _document_write = document.write.bind(document);
+
+var f1 = _pipe(
+	_count_by(function(user) {
+		return user.age - user.age % 10;
+	}), 
+	_map((count, key) => `<li>There are ${count} people in their ${key}s.</li>`),
+	list => '<ul>' + list.join('') + '</ul>',
+	_document_write
+);
+
+f1(users);
+
+var f2 = _pipe(_reject(user => user.age < 20), f1);
+
+f2(users);
